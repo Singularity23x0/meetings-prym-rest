@@ -1,0 +1,6 @@
+{
+    "name": "pastuszk/meetings-vue-slim",
+    "require": {
+        "slim/slim": "^3"
+    }
+}
