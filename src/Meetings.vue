@@ -36,6 +36,11 @@
         people: []
       };
     },
+    mounted() {
+      this.$http.get('participants').then(response => {
+        this.people = response.body;
+      });
+    },
     methods: {
       addNewParticipant(participant) {
         this.people.push(participant);
