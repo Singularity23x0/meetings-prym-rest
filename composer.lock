@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ad4e6eb87b95c5fb2925250201fa3566",
+    "content-hash": "6622e41163bb9a61719290a0d49d4370",
     "packages": [
         {
             "name": "nikic/fast-route",
@@ -281,6 +281,9 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "ext-json": "*",
+        "ext-sqlite3": "*"
+    },
     "platform-dev": []
 }
