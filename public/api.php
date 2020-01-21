@@ -15,20 +15,20 @@ $app->get(
     }
 );
 
+class MyDB extends SQLite3 {
+    function __construct() {
+        $this->open('../participants.db');
+    }
+}
+$db = new MyDB();
+if(!$db) {
+    echo $db->lastErrorMsg();
+    exit();
+}
+
 $app->get(
     '/api/participants',
-    function (Request $request, Response $response, array $args) {
-
-        class MyDB extends SQLite3 {
-            function __construct() {
-                $this->open('../participants.db');
-            }
-        }
-        $db = new MyDB();
-        if(!$db) {
-            echo $db->lastErrorMsg();
-            exit();
-        }
+    function (Request $request, Response $response, array $args) use ($db) {
 
         $participants = [];
 
@@ -48,18 +48,7 @@ $app->get(
 
 $app->get(
     '/api/participants/{id}',
-    function (Request $request, Response $response, array $args) {
-
-        class MyDB extends SQLite3 {
-            function __construct() {
-                $this->open('../participants.db');
-            }
-        }
-        $db = new MyDB();
-        if(!$db) {
-            echo $db->lastErrorMsg();
-            exit();
-        }
+    function (Request $request, Response $response, array $args) use ($db) {
 
         $sql = "SELECT * FROM participant where id = $args[id]";
         $ret = $db->query($sql);
@@ -74,6 +63,16 @@ $app->get(
         else {
             return $response->withStatus(404);
         }
+    }
+);
+
+$app->post(
+    '/api/participants',
+    function (Request $request, Response $response) use ($db) {
+        $requestData = $request->getParsedBody();
+        $sql = "INSERT INTO participant (firstname, lastname) VALUES ('$requestData[firstname]','$requestData[lastname]')";
+        $db->exec($sql);
+        return $response->withStatus(201);
     }
 );
 

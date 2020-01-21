@@ -43,7 +43,9 @@
     },
     methods: {
       addNewParticipant(participant) {
-        this.people.push(participant);
+        this.$http.post('participants', participant).then(response =>  {
+          this.people.push(participant);
+        });
       }
     }
   };
