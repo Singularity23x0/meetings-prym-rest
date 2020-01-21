@@ -49,14 +49,31 @@ $app->get(
 $app->get(
     '/api/participants/{id}',
     function (Request $request, Response $response, array $args) {
-        $participants = [
-            ['id' => 1, 'firstname' => 'John', 'lastname' => 'Doe'],
-            ['id' => 2, 'firstname' => 'Kate', 'lastname' => 'Pig'],
-            ['id' => 3, 'firstname' => 'Chris', 'lastname' => 'Lualigi'],
-            ['id' => 4, 'firstname' => 'Author', 'lastname' => 'McFakename']
-        ];
-        $id = $args['id'];
-        return $response->withJson($participants[$id]);
+
+        class MyDB extends SQLite3 {
+            function __construct() {
+                $this->open('../participants.db');
+            }
+        }
+        $db = new MyDB();
+        if(!$db) {
+            echo $db->lastErrorMsg();
+            exit();
+        }
+
+        $sql = "SELECT * FROM participant where id = $args[id]";
+        $ret = $db->query($sql);
+        if($row = $ret->fetchArray(SQLITE3_ASSOC)) {
+            $participant = [
+                'id' => $row['id'],
+                'firstname' => $row['firstname'],
+                'lastname' => $row['lastname']
+            ];
+            return $response->withJson($participant);
+        }
+        else {
+            return $response->withStatus(404);
+        }
     }
 );
 
